@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<object th:include="components/basepage :: metas" th:remove="tag"></object>
+    <object th:include="components/basepage :: css" th:remove="tag"></object>
+    <object th:include="components/basepage :: js" th:remove="tag"></object>
+</head>
+<body>
+<div class="bg-home">
+	<div class="row">
+		<div class="col-sm-6 offset-sm-3 padding-top padding-bottom">
+			<div class="card-login">
+				<h2 class="title">Selamat Datang di Sistem Informasi Laboratorium</h2>
+				<div th:if="${param.error}" style="text-align:center">
+					<span style="color:red; ">Invalid username or password.</span>
+				</div>
+				<form th:action="@{/login}" method="POST">
+				<div class="row" style="padding: 20px">
+					<div class="col-sm-10 offset-sm-1">
+				    	<div class="form group">
+				    		<input class="form-control login-input input-sm" placeholder="Username" type="text" name="username"/>
+						</div>
+				    </div>
+					<div class="col-sm-10 offset-sm-1" style="padding-top: 15px">
+						<div class="form group">
+				          	<input class="form-control login-input input-sm" placeholder="Password" type="password" name="password"/>
+						</div>
+				    </div>
+				    <div style="padding-top:30px" class="col-sm-10 offset-sm-1">
+				        <button type="submit" class="btn btn-success btn-block btn-lg">Log In</button>
+				    </div>
+				    <div style="padding-top:30px;text-align:center;color:white" class="col-sm-10 offset-sm-1">
+				    	Belum punya akun? <a th:href="@{user/tambah}" style="color:	maroon">Sign up.</a>
+				    </div>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+</html>
