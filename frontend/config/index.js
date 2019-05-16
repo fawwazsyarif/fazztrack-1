@@ -59,12 +59,17 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, '../dist/index.html'),
+    index: path.resolve('target/dist/index.html'),
 
     // Paths
-    assetsRoot: path.resolve(__dirname, '../dist'),
+    assetsRoot: path.resolve('target/dist'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
+
+    // Change build paths to make them Maven compatible
+    // see https://cli.vuejs.org/config/
+    outputDir: 'target/dist',
+    assetsDir: 'static',
 
     /**
      * Source Maps
