@@ -7,7 +7,7 @@
         scrollable
         >
         <v-card>
-            <v-card-text class="text-sm-left font-weight-medium subheading">Add new user account</v-card-text>
+            <v-card-text class="text-sm-left font-weight-medium subheading">Edit user account</v-card-text>
             <v-divider></v-divider>
             <v-card-text>
             <v-container grid-list-md>
@@ -102,6 +102,12 @@
                 text="The user has been saved!"
                 modalType="notification-success">
             </Modal>
+            <Modal
+                ref="modal2"
+                title="Add new account"
+                text="Input Invalid!"
+                modalType="notification-error">
+            </Modal>
             <v-btn style="width:196px;margin-top: 5%" round color="#A1CD43" dark @click="submitFormAdd">SAVE</v-btn>
             </v-card-actions>
         </v-card>
@@ -170,6 +176,7 @@ export default {
         async fetch(user) {
             try{
                 const response = await this.$axios.get('/api/objective/' + user.id)
+                this.id = user.id
                 this.user = user
                 this.name = user.name
                 this.nik = user.nik
@@ -207,31 +214,31 @@ export default {
         },
 
         async submitFormAdd() {
-            console.log(this.name);
-            console.log(this.password);
-            console.log(this.department.id);
-            console.log(this.role);
-            console.log(this.manager.id);
-            console.log(this.isActive.id);
-            const set = new Set();
-            set.add(this.roleList.filter(item => item.id === this.role)[0])
-            this.$axios.post(`/api/user/${this.user.id}/update`, {
-                name: this.name,
-                nik: this.nik,
-                username: this.username,
-                password: this.password,
-                roles: set,
-                isActive: this.isActive.id,
-                userDepartment: {
-                id: this.department.id
-                },
-                userManager: {
-                id: this.manager.id
-                }
-            })
-            this.$refs.modal.changeModalState();
-            this.$emit('updateTable')
-            this.changeModalState()
+            if(this.password.length >= 8 && this.passConfirm === this.password){
+                const set = new Set();
+                set.add(this.roleList.filter(item => item.id === this.role)[0])
+                const response = await this.$axios.post('/api/user/add', {
+                    id: this.id,
+                    name: this.name,
+                    nik: this.nik,
+                    username: this.username,
+                    password: this.password,
+                    roles: set,
+                    isActive: this.isActive.id,
+                    userDepartment: {
+                    id: this.department.id
+                    },
+                    userManager: {
+                    id: this.manager.id
+                    }
+                })
+
+                this.$refs.modal.changeModalState();
+                this.$emit('updateTable')
+                this.changeModalState()
+            } else{
+                this.$refs.modal2.changeModalState();
+            }
         },
     },
 

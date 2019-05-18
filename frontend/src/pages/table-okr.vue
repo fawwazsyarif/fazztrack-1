@@ -71,7 +71,7 @@
                                         <p class="mb-0 text-xs-center"> {{ props.item.progress }}% </p>
                                     </v-flex>
                                     <v-flex xs2 v-if="props.item.document">
-                                        <a :href="props.item.document" class="mb-0 text-xs-center accent--text"> <feather type="download" size=16 height=50 stroke-width=1 class=" mb-0 pr-1"></feather> Download document </a>
+                                        <a :href="props.item.document" class="mb-0 text-xs-center accent--text"> <feather type="link-2" size=16 height=50 stroke-width=1 class=" mb-0 pr-1"></feather> View document </a>
                                     </v-flex>
                                 </v-layout>
                                 <v-divider></v-divider>

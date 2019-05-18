@@ -53,7 +53,7 @@ Vue.prototype.$axios = axios;
 // Vue.use(Router);
 // Vue.prototype.$router = Router;
 
-// axios.defaults.baseURL = "http://localhost:8080"
+axios.defaults.baseURL = "http://localhost:8088"
 Vue.config.productionTip = false;
 
 Vue.filter('formatDate', function(value) {

@@ -93,7 +93,7 @@
                 <!-- if the system is currently on evaluation phase -->
                 <template v-else-if="activePhase.name === 'evaluation'">
                     <v-card-title>
-                        <span class="title"> Create new OKR</span>
+                        <span class="title"> Edit OKR</span>
                     </v-card-title>
                     <v-card-text>
                         <v-img :src="require('@/assets/cancel.svg')" contain aspect-ratio="2"></v-img>

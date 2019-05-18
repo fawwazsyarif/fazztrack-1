@@ -70,7 +70,11 @@ public class MainController {
 				response.setMessage("Username atau Password Salah");
 				return response;
 			}
+		} else {
+			response.setResult(null);
+			response.setStatus(401);
+			response.setMessage("Username atau Password Salah");
+			return response;
 		}
-		return response;
 	}
 }

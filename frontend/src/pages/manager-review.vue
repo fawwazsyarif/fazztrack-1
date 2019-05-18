@@ -76,7 +76,7 @@
                                                 </v-flex>
                                                 <v-flex xs6>
                                                     <v-layout row>
-                                                    <p class="error--text">Bellow Expectation</p>
+                                                    <p class="font-weight-bold">Bellow Expectation</p>
                                                     <v-radio-group 
                                                         row class="ma-0 ml-3 d-flex grow" 
                                                         v-model="listReviewQuestion[i].score"
@@ -92,7 +92,7 @@
                                                             </v-flex>
                                                         </v-layout>   
                                                     </v-radio-group>
-                                                    <p class="mr-4 text-xs-left">Outstanding</p>
+                                                    <p class="mr-4 text-xs-left font-weight-bold">Outstanding</p>
                                                     </v-layout>
                                                 </v-flex>
                                             </v-layout>

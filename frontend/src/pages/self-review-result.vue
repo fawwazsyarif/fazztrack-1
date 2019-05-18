@@ -7,11 +7,6 @@
                 <h3 id="title">Self Review</h3>    
             </v-flex>
             <v-flex xs4 class="text-xs-right">
-                <v-btn color="accent" class="white--text" dark @click="generatePDF()">
-                    <feather type="download" stroke-width=2 class="pr-2"></feather>
-                    <v-divider vertical color="white" class="my-1"></v-divider>
-                    <p class="ma-1 ml-3">Download result</p>
-                </v-btn>
             </v-flex>
         </v-layout>
         <v-layout justify-center align-center fill-height column>    
@@ -104,21 +99,6 @@ import { mapGetters } from 'vuex'
         }
     },
 
-    methods:{
-      generatePDF(){
-           console.log("Generate pdf...");
-          console.log(this.sumQuestion)
-            let self = [
-               {title: 'Component', dataKey: this.sumQuestion.questionReview.question},
-               {title: 'Score', dataKey: this.sumQuestion.score }
-            ];
-
-            let doc = new jsPDF();
-            doc.text('Self Review!', 10, 10);
-            doc.autoTable(self, this.sumQuestion);
-            doc.save("export.pdf");
-      },
-    }
   };
 </script>
 

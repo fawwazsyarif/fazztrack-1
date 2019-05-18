@@ -70,17 +70,17 @@ public class CommentController {
         ObjectiveModel temp = objectiveService.getObjectiveDetailById(idObjective);
         Date date = new Date();
 
-        comment.setId(comment.getId());
-        comment.setCommentObjective(temp);
-        comment.setDate(new Timestamp(date.getTime()));
-        comment.setDescription(comment.getDescription());
-        comment.setEdited(true);
-        comment.setCommenter(comment.getCommenter());
+        CommentModel commentAsli = commentDb.getOne(comment.getId());
 
-        commentService.addComment(comment);
+        //comment.setCommentObjective(temp);
+        commentAsli.setDate(new Timestamp(date.getTime()));
+        commentAsli.setDescription(comment.getDescription());
+        commentAsli.setEdited(true);
+
+        commentService.addComment(commentAsli);
 		response.setStatus(200);
-		response.setMessage("Succeess");
-		response.setResult(comment);
+		response.setMessage("Success");
+		response.setResult(commentAsli);
 
         return response;
     }

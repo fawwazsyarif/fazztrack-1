@@ -15,7 +15,6 @@
         @onModalRedSubmit="onModalRedSubmit">
         >
       </Modal>
-      <template v-if="(getAuthRole === 'Manager' || getAuthRole === 'Admin') && displayChangeStatus && (okrDetail.approvalStatus.id === 1 || okrDetail.approvalStatus.id === 2) " >
       <Modal 
         ref="modal2" 
         :title="modalTitle" 
@@ -23,6 +22,13 @@
         :modalType="modalType">
         >
       </Modal>
+      <Modal
+        ref="modalNotification"
+        :title="modalTitle"
+        :text="modalText"
+        :modalType="modalType">
+      </Modal>
+      <template v-if="(getAuthRole === 'Manager' || getAuthRole === 'Admin') && displayChangeStatus && (okrDetail.approvalStatus.id === 1 || okrDetail.approvalStatus.id === 2) " >
       <template v-if="displayChangeStatus && ((okrDetail.approvalStatus.id === 1 && getAuthRole === 'Manager') || (okrDetail.approvalStatus.id === 2 && getAuthRole === 'Admin'))" >
         <v-layout align-start justify-end> 
           <v-btn 
@@ -219,7 +225,7 @@
                         <v-toolbar flat dense class="py-1" color ="white" >
                           <v-toolbar-title class="title primary--text">{{ kr.description }}</v-toolbar-title>
                           <v-spacer></v-spacer>
-                          <a :href="kr.document" class="text-xs-center mb-0 py-4 accent--text pr-0"> <feather type="download" size=16 stroke-width=2 class="pr-1"></feather> Download document </a>
+                          <a :href="kr.document" class="text-xs-center mb-0 py-4 accent--text pr-0"> <feather type="link-2" size=16 stroke-width=2 class="pr-1"></feather> View document </a>
                         </v-toolbar>
 
                         <v-divider></v-divider>
@@ -297,7 +303,7 @@
                       </template>
                       <v-card>
                         <v-card-text>
-                          <v-textarea box label="Edit Comment" v-model="commentDescription"></v-textarea>
+                          <v-textarea box label="Edit Comment" v-model="commentEditDesc"></v-textarea>
                           <v-card-actions>
                           <v-spacer></v-spacer>
                             <v-btn round @click="deleteComment(comment.id)" color="error">Delete</v-btn>
@@ -392,6 +398,7 @@ export default {
           displayChangeStatus: true,
           expand: false,
           search: '',
+          activePhase:{},
           okrDetail: {
             userObjective: {},
             approvalStatus: {},
@@ -413,6 +420,7 @@ export default {
           commentDescription:'',
 
           //buat edit comment
+          commentEditDesc:'',
           commentDisabled:false
       }
   },
@@ -498,17 +506,18 @@ export default {
 
     async editComment(idComment, idCommenter){
       try {
-        if(this.commentDescription !== ''){
+        if(this.commentEditDesc !== ''){
           console.log(idComment)
+          console.log(this.commentDisabled)
           const response = await this.$axios.post(`/api/objective/${this.$route.params.id}/success-edit-comment`, {
-            id: idComment, description: this.commentDescription, commenter: idCommenter
+            id: idComment, description: this.commentEditDesc, commenter: {id: this.getAuthUser.id}
           })
           
           this.modalTitle = 'Success'
           this.modalText = 'Comment Edited'
           this.modalType = 'notification-success'
           this.$refs.modal2.changeModalState();
-          this.commentDescription = ''
+          this.commentEditDesc = ''
           
           //biar ngambil ulang data
           const response2 = await this.$axios.get(`/api/objective/${this.$route.params.id}`)
@@ -516,6 +525,9 @@ export default {
 
           //this.$router.push(`/detailOKR/${this.$route.params.id}`)
           console.log(response)
+          setTimeout(() => {
+                this.$router.go();
+            }, 700);
         } else{
           this.modalTitle = 'Alert'
           this.modalText = 'Comment not valid!'
@@ -528,10 +540,19 @@ export default {
     },
 
     changeState : function() {
-      this.modalTitle = 'Change Status',
-      this.modalText = 'Approve or Reject this OKR?',
-      this.modalType = 'confirmation',
-      this.$refs.modal.changeModalState();
+      if(this.activePhase.name === 'execution') {
+        console.log("execution")
+        this.modalTitle = 'Change Status',
+        this.modalText = 'Approve or Reject this OKR?',
+        this.modalType = 'confirmation',
+        this.$refs.modal.changeModalState();
+      } else if(this.activePhase.name === 'evaluation') {
+          console.log("evaluation")
+          this.modalTitle = 'Change Status',
+          this.modalText='You can not approve or reject this OKR because you are still on evaluation phase',
+          this.modalType = 'notification-error',
+          this.$refs.modalNotification.changeModalState();
+      }
     },
 
     async onModalGreenSubmit() {
@@ -588,6 +609,8 @@ export default {
         this.okrProgress = calculateProgress(this.okrDetail.listKR)
 
         //const response2 = await this.$axios.get(`/api/get-all-objective/`)
+        const phase = await this.$axios.get('/api/get-active-phase')
+        this.activePhase = phase.data.result
         
         const okrData = await this.$axios.get('/api/objective/user/' + this.okrDetail.userObjective.id)
         this.okrData = okrData.data.result

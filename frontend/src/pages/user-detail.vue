@@ -8,13 +8,13 @@
           </div>
           <v-spacer></v-spacer>
           <div v-if="this.user.roles[0].name === 'Admin'">
-          <v-chip color="warning">{{ this.user.roles[0].name }}</v-chip>
+          <v-chip color="orange" >{{ this.user.roles[0].name }}</v-chip>
           </div>
           <div v-else-if="this.user.roles[0].name === 'Manager'">
-            <v-chip color="success">{{ this.user.roles[0].name }}</v-chip>
+            <v-chip color="red" class="white--text">{{ this.user.roles[0].name }}</v-chip>
           </div>
           <div v-else-if="this.user.roles[0].name === 'Employee'">
-            <v-chip color="primary">{{ this.user.roles[0].name }}</v-chip>
+            <v-chip color="blue" class="white--text">{{ this.user.roles[0].name }}</v-chip>
           </div>
         </v-card-title>
         <v-divider></v-divider>

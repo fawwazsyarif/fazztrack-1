@@ -18,8 +18,9 @@
       <template>
         <div class="text-xs-center">
           <v-btn color="accent" class="white--text" dark @click="displayAddUser">
-          <feather type="edit-3" stroke-width=1 class="pr-3"></feather>
-          Add new user
+            <feather type="plus" stroke-width=2 class="pr-2"></feather>
+            <v-divider vertical color="white" class="my-1"></v-divider>
+            <p class="ma-1 ml-3">Add New user</p>
           </v-btn>
         </div>
       </template>
@@ -50,13 +51,13 @@
              </div>
              <div v-else>
                <div v-if="props.item.roles[0].name === 'Admin'">
-                 <v-chip color="orange" light>{{ props.item.roles[0].name }}</v-chip>
+                 <v-chip small color="orange" light>{{ props.item.roles[0].name }}</v-chip>
                </div>
                <div v-else-if="props.item.roles[0].name === 'Manager'">
-                 <v-chip color="red" dark>{{ props.item.roles[0].name }}</v-chip>
+                 <v-chip small color="red" dark>{{ props.item.roles[0].name }}</v-chip>
                </div>
                <div v-else-if="props.item.roles[0].name === 'Employee'">
-                 <v-chip color="blue" dark>{{ props.item.roles[0].name }}</v-chip>
+                 <v-chip small color="blue" dark>{{ props.item.roles[0].name }}</v-chip>
                </div>
              </div>
               </td>

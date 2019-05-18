@@ -7,7 +7,8 @@ import { mapGetters } from 'vuex'
 
 const state = {
     //nyimpen user yang lagi login
-    authUser: {}
+    authUser: {},
+    isWrongPassword: false,
 }
 
 const getters = {
@@ -15,6 +16,10 @@ const getters = {
         // return !!state.authUser
         return !!Object.keys(state.authUser).length
 
+    },
+
+    isWrongPassword(state) {
+        return state.isWrongPassword
     },
     getAuthUser(state) {
         return state.authUser
@@ -49,16 +54,23 @@ const actions = {
                 password: password
             }
             const response = await axios.post('/login', payload)
-            // console.log(response)
-            console.log("sini")
+            console.log(response)
             commit('setAuthUser', response.data.result)
-            router.push('/')
-            console.log("hehe")
-            console.log(this.isAuthenticated)
+            if (response.data.status !== 401) {
+                commit('setIsWrongPassword', false)
+                router.push('/')
+            } else {
+                commit('setIsWrongPassword', true)  
+                commit('setAuthUser', {})
+            }
 
         } catch (error) {
             console.log(error)
-            commit('setAuthUser', null)
+            commit('setAuthUser', {})
+            if (error.status === 401) {
+                commit('setIsWrongPassword', true)
+                commit('setAuthUser', {})
+            }
         }
     },
     async logout({commit}) {
@@ -74,6 +86,9 @@ const mutations = {
     setAuthUser(state, data) {
         state.authUser = data
     },
+    setIsWrongPassword(state, data) {
+        state.isWrongPassword = data
+    }
 }
 
 export default {

@@ -35,6 +35,14 @@
                                 class="pt-4"
                                 thumb-label="always">
                             </v-slider>
+                            <v-text-field
+                                :counter="255"
+                                label="Document link"
+                                type="text"
+                                required
+                                v-model="krData.document"
+                                prepend-inner-icon="link"
+                            ></v-text-field>
                         </template>
                     </v-list>
                 </v-card-text>
@@ -95,7 +103,7 @@ export default {
             const newKRProgress = {
                 description: this.krData.description,
                 progress: this.krData.progress,
-                document: "no link"
+                document: this.krData.document
             }
             const response = await this.$axios.post((`/api/objective/update-kr-progress/`+this.krData.id), newKRProgress)
             console.log(response)

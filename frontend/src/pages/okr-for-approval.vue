@@ -11,6 +11,12 @@
             @onModalRedSubmit="onModalRedSubmit">
             >
         </Modal>
+        <Modal
+            ref="modalNotification"
+            :title="modalTitle"
+            :text="modalText"
+            :modalType="modalType">
+        </Modal>
         <v-layout shrink align-content-center justify-end row pb-5>
             <v-flex xs4>
                 <v-text-field 
@@ -95,10 +101,6 @@
                                     <v-flex xs1>
                                         <p class="mb-0 text-xs-center"> {{ props.item.progress }}% </p>
                                     </v-flex>
-                                    <v-flex xs2 class="pl-5">
-                                        <p class="mb-0 text-xs-center accent--text"> <feather type="download" size=16 height=50 stroke-width=1 class=" mb-0 pr-1"></feather> Download document </p>
-                                    </v-flex>
-
                                 </v-layout>
                                 <v-divider></v-divider>
                             </template>
@@ -142,6 +144,7 @@ export default {
         return{
             expand: false,
             search: '',
+            activePhase: {},
             okrData: [],
             krData: [],
             selected: [],
@@ -202,6 +205,11 @@ export default {
                 const response = await this.$axios.get(`/api/get-objective-for-approval/${this.getAuthUserIdDepartment}`)
                 this.okrData = response.data.result
             }
+            const phase = await this.$axios.get('/api/get-active-phase')
+            this.activePhase = phase.data.result
+
+            console.log(this.activePhase)
+
             console.log(this.okrData)
             console.log(this.selected)
     
@@ -226,10 +234,20 @@ export default {
             return sum/value.length
         },
          changeState : function() {
-            this.modalTitle = 'Change Status',
-            this.modalText = 'Approve or Reject these ' + this.selected.length + ' OKRs?',
-            this.modalType = 'confirmation',
-            this.$refs.modal.changeModalState();
+            if(this.activePhase.name === 'execution') {
+                console.log("execution")
+                this.modalTitle = 'Change Status',
+                this.modalText = 'Approve or Reject these ' + this.selected.length + ' OKRs?',
+                this.modalType = 'confirmation',
+                this.$refs.modal.changeModalState();
+            } else if(this.activePhase.name === 'evaluation') {
+                console.log("evaluation")
+                this.modalTitle = 'Change Status',
+                this.modalText='You can not approve or reject this OKR because you are still on evaluation phase',
+                this.modalType = 'notification-error',
+                this.$refs.modalNotification.changeModalState();
+            }
+            
         },
 
         

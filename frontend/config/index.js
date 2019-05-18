@@ -10,21 +10,7 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    
-    // proxy all webpack dev-server requests starting with /api
-    // to our Spring Boot backend (localhost:8088) using http-proxy-middleware
-    // see https://cli.vuejs.org/config/#devserver-proxy
-    proxyTable: {
-      '/api': {
-        target: 'http://localhost:8088',
-        ws: true,
-        changeOrigin: true
-      }
-    },
-    // Change build paths to make them Maven compatible
-    // see https://cli.vuejs.org/config/
-    outputDir: 'target/dist',
-    assetsDir: 'static',
+    proxyTable: {},
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
@@ -54,22 +40,17 @@ module.exports = {
     // https://vue-loader.vuejs.org/en/options.html#cachebusting
     cacheBusting: true,
 
-    cssSourceMap: true,
+    cssSourceMap: true
   },
 
   build: {
     // Template for index.html
-    index: path.resolve('target/dist/index.html'),
+    index: path.resolve(__dirname, '../dist/index.html'),
 
     // Paths
-    assetsRoot: path.resolve('target/dist'),
+    assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-
-    // Change build paths to make them Maven compatible
-    // see https://cli.vuejs.org/config/
-    outputDir: 'target/dist',
-    assetsDir: 'static',
 
     /**
      * Source Maps
@@ -91,5 +72,5 @@ module.exports = {
     // `npm run build --report`
     // Set to `true` or `false` to always turn it on or off
     bundleAnalyzerReport: process.env.npm_config_report
-  },
+  }
 }

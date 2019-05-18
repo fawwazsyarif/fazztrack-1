@@ -61,7 +61,8 @@ public class UserController {
         userService.addUser(user);
         response.setStatus(200);
         response.setMessage("Success");
-        response.setResult(user);
+        response.setResult(user);	
+        
         return response;
     }
 

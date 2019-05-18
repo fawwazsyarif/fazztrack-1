@@ -5,6 +5,22 @@
                 ref="modalAssignPeer"
                 @updateTable="updateTable">
             </ModalAssignPeer>
+            <Modal
+                ref="modal"
+                :title="modalTitle"
+                :text="modalText"
+                :modalType="modalType"
+                greenButtonText="Delete"
+                redButtonText="Cancel"
+                @onModalGreenSubmit="onModalGreenSubmit"
+                @onModalRedSubmit="onModalRedSubmit">
+            </Modal>
+            <Modal
+                ref="modal2"
+                :title="modalTitle"
+                :text="modalText"
+                :modalType="modalType">
+            </Modal>
             <v-flex xs4>
                 <!-- <v-card> -->
                 <v-text-field 
@@ -53,8 +69,13 @@
                             <template v-slot:items="props">
                                 <template v-if="props.item.type === 'peer-review'">
                                     <v-layout @click="props.expanded = !props.expanded" class="px-4" row align-center justify-start wrap>
-                                        <v-flex xs12 pl-4>
+                                        <v-flex xs10 pl-4>
                                             <p class="mb-0 pa-2 text-xs-left"> {{ props.item.reviewee.name }} </p>
+                                        </v-flex>
+                                        <v-flex xs2 pl-4>
+                                            <p class="mb-0 pa-2 text-xs-left">
+                                                <v-icon @click="deleteReview(props.item.id, props.item.status)">delete</v-icon>
+                                            </p>
                                         </v-flex>
                                     </v-layout>
                                 </template>
@@ -82,6 +103,7 @@ export default {
 
     data () {
         return{
+            idReview: '',
             info: null,
             expand: false,
             modalTitle: '',
@@ -142,6 +164,35 @@ export default {
         displayAssignPeer(idReviewer) {
             this.$refs.modalAssignPeer.changeModalState();
             this.$refs.modalAssignPeer.fetch(idReviewer);
+        },
+
+        deleteReview(idReview, status){
+            if(status==="incomplete"){
+                this.idReview = idReview,
+                this.modalTitle = 'Delete Peer',
+                this.modalText = 'Are you sure you want to delete this Peer?',
+                this.modalType = 'confirmation-reverse',
+                this.$refs.modal.changeModalState()
+            } else{
+                this.modalTitle = 'Delete Peer',
+                this.modalText = "This peer has completed his/her Peer Review, so you can't delete it",
+                this.modalType = 'notification-error',
+                this.$refs.modal2.changeModalState()
+            }
+        },
+        async onModalGreenSubmit() {
+            try{
+                const response = await this.$axios.post(`/api/peer-review/delete/${this.idReview}`)
+                this.updateTable();
+                this.$refs.modal.changeModalState();
+
+            } catch(error){
+                console.warn(error)
+            }
+        },
+        async onModalRedSubmit() {
+            console.log("masuk onmodalred")
+            this.$refs.modal.changeModalState();
         },
 
         async updateTable() {

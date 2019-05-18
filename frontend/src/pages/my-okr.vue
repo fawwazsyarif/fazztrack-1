@@ -23,8 +23,9 @@
         ref="modalUpdateProgress"
         @updateTable="updateTable">
     </ModalUpdateProgress>
-        <v-layout column class="ma-auto pb-2 mb-4">
-            <h2>Hello!</h2>
+        <template v-if="activePhase.name === 'execution'">
+            <v-layout column class="ma-auto pb-2 mb-4">
+            <h2>Hello! It's execution time</h2>
             <h3>What do you want to achieve today?</h3>
             <v-flex xs12 sm6>
                 <v-btn color="accent" class="white--text" dark @click="displayAddOkr">
@@ -33,61 +34,71 @@
                     <p class="ma-1 ml-3">Add New OKR</p>
                 </v-btn>
             </v-flex>
-        </v-layout>
-        <template>
-            <v-layout column class="ma-auto pb-2 mb-4">
-                <p class="subtitle">Confused? Let's add your OKR from you Manager's Recommendation!</p>
-                <v-flex xs12 sm6>
-                    <v-btn color="accent" outline class="white--text" dark :to="{ name: 'view-okr-recommendation', params: { id: getAuthUser.manager }}">
-                        <p class="ma-1 ml-3">view recommendation</p>
-                    </v-btn>
-                </v-flex>
             </v-layout>
+            <template>
+                <v-layout column class="ma-auto pb-2 mb-4">
+                    <p class="subtitle">Confused? Let's add your OKR from you Manager's Recommendation!</p>
+                    <v-flex xs12 sm6>
+                        <v-btn color="accent" outline class="white--text" dark :to="{ name: 'view-okr-recommendation', params: { id: getAuthUser.manager }}">
+                            <p class="ma-1 ml-3">view recommendation</p>
+                        </v-btn>
+                    </v-flex>
+                </v-layout>
+            </template>
         </template>
+
+        <template v-else-if="activePhase.name === 'evaluation'">
+            <v-layout column class="ma-auto pb-2 mb-4">
+            <h2>Hello! It's evaluation time!</h2>
+            <p> Self-evaluation is necessary to improve your performance</p>
+            <v-flex xs12 sm6>
+                <v-btn color="accent" class="white--text" dark :to="{ name: 'self-review'}">
+                    start self review
+                </v-btn>
+            </v-flex>
+            </v-layout>    
+        </template>
+        
         <v-layout class="ma-auto pb-2">
             <h3>My OKR Overview</h3>
         </v-layout>
         <v-layout row align-content class="pb-4">
             <v-layout row class="ma-0 pa-auto">
-                <v-flex xs5>
-                    <v-layout column>
-                        <v-flex xs12 mt-1>
-                            <v-card height="77px" flat class="card">
-                                <v-layout row mb-0>
-                                    <v-flex xs5 pa-0 ml-2 class="text-xs-left">
-                                        <v-icon color="accent" class="ma-2 pa-2" large>work</v-icon>
-                                    </v-flex>
-                                    <v-flex xs3 class="title text-xs-right my-4">
-                                        <h2 class="title">{{okrData.length}}</h2>
-                                    </v-flex>
-                                    <v-divider vertical class="ma-2"></v-divider>
-                                    <v-flex xs4 class="text-xs-left">
-                                        <p class="mb-0 mt-3">Total Objective</p>
-                                        <p class="pa-0 primary--text text--lighten-4">{{today}}</p>
-                                    </v-flex>
-                                </v-layout>
-                            </v-card>
-                        </v-flex>
-                        <v-flex xs12 mt-2>
-                            <v-card height="77px" flat class="card">
-                                <v-layout row mb-0>
-                                    <v-flex xs5 pa-0 ml-2  class="text-xs-left">
-                                        <v-icon color="warning" class="ma-2 pa-2" large>check_circle</v-icon>
-                                    </v-flex>
-                                    <v-flex xs3 class="text-xs-right my-4">
-                                        <h2 class="title">{{totalKR}}</h2>
-                                    </v-flex>
-                                    <v-divider vertical class="ma-2"></v-divider>
-                                    <v-flex xs4 class="text-xs-left">
-                                        <p class="mb-0 mt-3">Total key result</p>
-                                        <p class="pa-0 primary--text text--lighten-4">{{today}}</p>
-                                    </v-flex>
-                                </v-layout>
-                            </v-card>
-                        </v-flex>
+                <v-flex xs5 py-0 pl-0 pr-2 ma-0>
+                    <v-layout column fill-height justify-space-between pa-0 ma-0>
+                        <v-card height="77px" flat class="card">
+                            <v-layout row mb-0>
+                                <v-flex xs5 pa-0 ml-2 class="text-xs-left">
+                                    <v-icon color="accent" class="ma-2 pa-2" large>work</v-icon>
+                                </v-flex>
+                                <v-flex xs3 class="title text-xs-right my-4">
+                                    <h2 class="title">{{okrData.length}}</h2>
+                                </v-flex>
+                                <v-divider vertical class="ma-2"></v-divider>
+                                <v-flex xs4 class="text-xs-left">
+                                    <p class="mb-0 mt-3">Total Objective</p>
+                                    <p class="pa-0 primary--text text--lighten-4">{{today}}</p>
+                                </v-flex>
+                            </v-layout>
+                        </v-card>
+                        <v-card height="77px" flat class="card">
+                            <v-layout row mb-0>
+                                <v-flex xs5 pa-0 ml-2  class="text-xs-left">
+                                    <v-icon color="warning" class="ma-2 pa-2" large>check_circle</v-icon>
+                                </v-flex>
+                                <v-flex xs3 class="text-xs-right my-4">
+                                    <h2 class="title">{{totalKR}}</h2>
+                                </v-flex>
+                                <v-divider vertical class="ma-2"></v-divider>
+                                <v-flex xs4 class="text-xs-left">
+                                    <p class="mb-0 mt-3">Total key result</p>
+                                    <p class="pa-0 primary--text text--lighten-4">{{today}}</p>
+                                </v-flex>
+                            </v-layout>
+                        </v-card>
                     </v-layout>
                 </v-flex>
-                <v-flex xs7 class="ma-10">
+                <v-flex xs7 py-0 pl-2 pr-0 ma-0>
                     <v-card dark color="white" height="170px" flat class="card">
                         <v-container>
                             <v-layout row>

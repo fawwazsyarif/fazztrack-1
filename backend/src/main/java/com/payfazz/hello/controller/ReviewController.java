@@ -92,6 +92,22 @@ public class ReviewController {
 		response.setMessage("Success");
         response.setResult(reviewDb.findByTypeAndReviewerAndReviewee(reviewType, userService.findUserById(reviewerId), userService.findUserById(revieweeId)));
         return response;
+	}
+	
+	@PostMapping(value = "/peer-review/delete/{idReview}")
+	public BaseResponse<ReviewModel> deletePeerReview(@PathVariable(name = "idReview", required= true) Long idReview) {
+		BaseResponse<ReviewModel> response = new BaseResponse<ReviewModel>();
+		ReviewModel review = reviewService.getReviewModel(idReview);
+		try{
+			reviewService.deleteReview(review);
+			response.setStatus(200);
+			response.setMessage("Success");
+			response.setResult(review);		
+		} catch(Error e){
+			response.setStatus(404);
+            response.setMessage(e.getMessage());
+		}		
+		return response;
     }
 
 }

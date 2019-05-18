@@ -19,6 +19,9 @@
                     class="input-group--focused"
                     @click:append="show = !show">
                 </v-text-field>
+                <template v-if="isWrongPassword">
+                    <p class="error--text">Username or password is incorrect</p>
+                </template>
                 <v-btn type="submit" color="info" large block class="mt-2" @click.native="login"> Login</v-btn>
               </v-form>
             </v-card>
@@ -50,7 +53,8 @@ export default {
 
     computed: {
         ...mapGetters([
-            'getAuthUser'
+            'getAuthUser',
+            'isWrongPassword'
         ])
     },
 

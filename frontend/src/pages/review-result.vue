@@ -169,6 +169,15 @@ import autoTable from 'jspdf-autotable';
             var j;
             let doc = new jsPDF();
 
+            doc.setFontSize(25);
+            doc.text('Review Result',85,10);
+
+            doc.setFontSize(10);
+            doc.text("Name           :    " + this.sumReview[0].reviewee.name,10,30);
+
+            doc.setFontSize(10);
+            doc.text("Department  :    " + this.sumReview[0].reviewee.userDepartment.name,10,35)
+
             for(i=0;i<this.sumReview.length;i++){
               if(this.sumReview[i].type=="self-review" && this.sumReview[i].status=="completed"){
                 console.log("aman")
@@ -206,81 +215,102 @@ import autoTable from 'jspdf-autotable';
               }
             }
 
-            doc.setFontSize(25);
-            doc.text('Review Result',85,10);
-
-
-            doc.setFontSize(10);
-            doc.text("Name           :    " + this.sumReview[0].reviewer.name,10,30);
-
-            doc.setFontSize(10);
-            doc.text("Department  :    " + this.sumReview[0].reviewer.userDepartment.name,10,35)
+            
 
             //Self Review
-            let selfReview1 = this.selfReview.map(u => {
-              let questionReview1 = u.questionReview.question;
-              let score1 = u.score;
-              return {questionReview1 : questionReview1,score1 : score1};
-            });
+            if(this.selfReview.length>0){
+              let selfReview1 = this.selfReview.map(u => {
+                let questionReview1 = u.questionReview.question;
+                let score1 = u.score;
+                return {questionReview1 : questionReview1,score1 : score1};
+              });
 
-            let self = [
-              {title: 'Component', dataKey: "questionReview1"},
-              {title: 'Score', dataKey: "score1" }
-            ];
+              let self = [
+                {title: 'Component', dataKey: "questionReview1"},
+                {title: 'Score', dataKey: "score1" }
+              ];
 
-            doc.setFontSize(16);
-            doc.text('Self Review',90,60);
+              doc.setFontSize(16);
+              doc.text('Self Review',90,60);
 
-            var score = 0;
-            var sum =0;
-              for(i=0;i<this.selfReview.length;i++){
-                score += this.selfReview[i].score
-                sum++
-              }
-            this.average = (score/sum).toFixed(1)
-            doc.setFontSize(13);
-            doc.text("Average Score : " + this.average,15, 70  );
-            this.average = 0;
-
-            doc.autoTable(self, selfReview1,{
-              startY :75,
-              // createdCell:function(cell,data){
-
-              // }
-            });
-
-            doc.addPage();
-
-            let managerReview1 = this.managerReview.map(u => {
-              let questionReview1 = u.questionReview.question;
-              let score1 = u.score;
-              return {questionReview1 : questionReview1,score1 : score1};
-            });
-
-            let manager = [
-                  {title: 'Component', dataKey: "questionReview1"},
-                  {title: 'Score', dataKey: "score1"}
-                ];
-
-                doc.setFontSize(16);
-                doc.text('Manager Review',85,10);
-
-                doc.autoTable(manager, managerReview1,{
-                  startY :25
-                });
-
-                var score = 0;
-                var sum =0;
-                for(i=0;i<this.managerReview.length;i++){
-                    score += this.managerReview[i].score
-                    sum++
-
+              var score = 0;
+              var sum =0;
+                for(i=0;i<this.selfReview.length;i++){
+                  score += this.selfReview[i].score
+                  sum++
                 }
-                this.average = (score/sum).toFixed(1)
-                doc.setFontSize(13);
-                doc.text("Average Score : " + this.average,15, 20  );
+              this.average = (score/sum).toFixed(1)
+              doc.setFontSize(13);
+              doc.text("Average Score : " + this.average,15, 70  );
+              this.average = 0;
 
+              doc.autoTable(self, selfReview1,{
+                startY :75,
+                // createdCell:function(cell,data){
+
+                // }
+              });
+              if(this.managerReview.length>0 || this.peerReview.length>0){
                 doc.addPage();
+              }
+            }
+            
+            if(this.managerReview.length>0){
+              let managerReview1 = this.managerReview.map(u => {
+                let questionReview1 = u.questionReview.question;
+                let score1 = u.score;
+                return {questionReview1 : questionReview1,score1 : score1};
+              });
+
+              let manager = [
+                    {title: 'Component', dataKey: "questionReview1"},
+                    {title: 'Score', dataKey: "score1"}
+                  ];
+
+                  if(this.selfReview.length>0){
+                    doc.setFontSize(16);
+                    doc.text('Manager Review',85,10);
+
+                    
+                    var score = 0;
+                    var sum =0;
+                    for(i=0;i<this.managerReview.length;i++){
+                        score += this.managerReview[i].score
+                        sum++
+
+                    }
+                    this.average = (score/sum).toFixed(1)
+                    doc.setFontSize(13);
+                    doc.text("Average Score : " + this.average,15, 20  );
+                    doc.autoTable(manager, managerReview1,{
+                      startY :25
+                    });
+
+                  }
+                  else{
+                    doc.setFontSize(16);
+                    doc.text('Manager Review',90,60);
+
+                    var score = 0;
+                    var sum =0;
+                    for(i=0;i<this.managerReview.length;i++){
+                        score += this.managerReview[i].score
+                        sum++
+
+                    }
+                    this.average = (score/sum).toFixed(1)
+                    doc.setFontSize(13);
+                    doc.text("Average Score : " + this.average,15, 70  );
+                    doc.autoTable(manager, managerReview1,{
+                      startY :75
+                    });
+                  }
+
+                  if(this.peerReview.length>0){
+                    doc.addPage();
+                  }
+
+            }
 
                 for(i=0;i< this.peerReview.length;i++){
                   let peerReview1 = this.peerReview[i].map(u => {
@@ -293,24 +323,50 @@ import autoTable from 'jspdf-autotable';
                     {title: 'Component', dataKey: "questionReview1"},
                     {title: 'Score', dataKey: "score1"}
                   ];
-                  doc.setFontSize(16);
-                  doc.text('Peer Review',85,10);
-                  doc.autoTable(peer, peerReview1,{
-                    startY :25
-                  });
-                  var score = 0;
-                  var sum =0;
-                  console.log(this.peerReview[i].length)
-                  for(j=0;j< this.peerReview[i].length;j++){
-                      score += this.peerReview[i][j].score
-                      sum++
 
+                  if(this.selfReview.length>0){
+                    doc.setFontSize(16);
+                    doc.text('Peer Review',85,10);
+                   
+                    var score = 0;
+                    var sum =0;
+                    console.log(this.peerReview[i].length)
+                    for(j=0;j< this.peerReview[i].length;j++){
+                        score += this.peerReview[i][j].score
+                        sum++
+
+                    }
+
+
+                    this.average = (score/sum).toFixed(1)
+                    doc.setFontSize(13);
+                    doc.text("Average Score : " + this.average,15,20  );
+                     doc.autoTable(peer, peerReview1,{
+                      startY :25
+                    });
                   }
 
+                  else{
+                    doc.setFontSize(16);
+                    doc.text('Peer Review',90,60);
+                    
+                    var score = 0;
+                    var sum =0;
+                    console.log(this.peerReview[i].length)
+                    for(j=0;j< this.peerReview[i].length;j++){
+                        score += this.peerReview[i][j].score
+                        sum++
 
-                  this.average = (score/sum).toFixed(1)
-                  doc.setFontSize(13);
-                  doc.text("Average Score : " + this.average,15,20  );
+                    }
+
+
+                    this.average = (score/sum).toFixed(1)
+                    doc.setFontSize(13);
+                    doc.text("Average Score : " + this.average,15,70  );
+                    doc.autoTable(peer, peerReview1,{
+                      startY :75
+                    });
+                  }
 
                   if(i<this.peerReview.length-1){
                     doc.addPage();
